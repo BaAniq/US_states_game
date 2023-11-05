@@ -11,9 +11,17 @@ states_and_data = pandas.read_csv('50_states.csv')
 states_name_list = states_and_data.state.to_list()
 guessed_states = []
 while len(guessed_states) < 50:
-    users_state = (screen.textinput(title=f'{len(guessed_states)}/50 Guess the State', prompt="What's another state's name")).title()
-
-    if users_state in states_name_list:
+    users_state = (screen.textinput(title=f'{len(guessed_states)}/50 Guess the State',
+                                    prompt="What's another state's name")).title()
+    if users_state == 'Exit':
+        not_guessed_state = []
+        for state in states_name_list:
+            if state not in guessed_states:
+                not_guessed_state.append(state)
+        new_data_states = pandas.DataFrame(not_guessed_state)
+        new_data_states.to_csv("states_to_learn.csv")
+        break
+    if users_state in states_name_list and users_state not in guessed_states:
         guessed_states.append(users_state)
         data_for_users_state = states_and_data[states_and_data.state == users_state]
         x_user_state = int(data_for_users_state.x)
